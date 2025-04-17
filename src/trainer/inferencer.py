@@ -143,9 +143,8 @@ class Inferencer(BaseTrainer):
         embedding_22 = F.normalize(outputs2_2, p=2, dim=1)
 
         score_1 = torch.matmul(embedding_11, embedding_21.T).diagonal()
-        score_2 = self.averaging(torch.matmul(embedding_12, embedding_22.T))
+        score_2 = self.averaging(torch.matmul(embedding_12, embedding_22.T)).to(self.device)
         scores = (score_1 + score_2) / 2
-        # scores = scores.detach().cpu().numpy()
         outputs = {"logits" : scores}
 
 

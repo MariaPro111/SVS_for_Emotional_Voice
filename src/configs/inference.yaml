@@ -1,0 +1,13 @@
+defaults:
+  - model: ecapa_tdnn
+  - metrics: inference
+  - datasets: eval_dataset
+  - dataloader: dataloader
+  - transforms: example
+  - _self_
+inferencer:
+  device_tensors: ["data_object1_1", "data_object1_2", "data_object2_1", "data_object2_2", "labels"]    # which tensors should be on device (ex. GPU)
+  device: auto    # device name or "auto"
+  save_path: "example"  # any name here, can be a dataset name
+  seed: 1
+  from_pretrained: "pretrained/pretrain.model"   # path to the pretrained model

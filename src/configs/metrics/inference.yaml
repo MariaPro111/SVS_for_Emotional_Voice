@@ -1,0 +1,5 @@
+device: "auto"
+inference:
+  - _target_: src.metrics.EERMetric
+    device: ${metrics.device}
+    name: "EqualErrorRate"

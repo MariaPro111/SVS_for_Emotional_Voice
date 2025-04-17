@@ -30,18 +30,12 @@ def collate_fn(dataset_items: list[dict]):
 
     result_batch = {}
 
-    result_batch["data_object1_1"] = torch.vstack(crop("data_object1_1", dataset_items))
+    result_batch["data_object_1"] = torch.vstack(crop("data_object_1", dataset_items))
 
-    result_batch["data_object1_2"] = torch.vstack(
-        [elem["data_object1_2"] for elem in dataset_items]
+    result_batch["data_object_2"] = torch.vstack(
+        [elem["data_object_2"] for elem in dataset_items]
     )
-
-    result_batch["data_object2_1"] = torch.vstack(crop("data_object2_1", dataset_items))
-
-    result_batch["data_object2_2"] = torch.vstack(
-        [elem["data_object2_2"] for elem in dataset_items]
-    )
-
-    result_batch["labels"] = torch.tensor([elem["labels"] for elem in dataset_items])
+    result_batch["index"] = torch.tensor([elem["index"] for elem in dataset_items])
+    result_batch["test_pairs"] = torch.tensor([elem["test_pairs"] for elem in dataset_items])
 
     return result_batch

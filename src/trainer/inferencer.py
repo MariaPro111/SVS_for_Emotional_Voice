@@ -66,7 +66,8 @@ class Inferencer(BaseTrainer):
         # path definition
 
         self.save_path = save_path
-
+        self.embeddings = {}
+        self.pairs = []
         # define metrics
         self.metrics = metrics
         if self.metrics is not None:
@@ -94,16 +95,6 @@ class Inferencer(BaseTrainer):
             logs = self._inference_part(part, dataloader)
             part_logs[part] = logs
         return part_logs
-    
-    def averaging(self, matrix):
-        n = matrix.shape[0] // 5
-        scores = []
-        for i in range(n):
-            start_idx = i * 5
-            end_idx = (i + 1) * 5
-            score = torch.mean(matrix[start_idx : end_idx, start_idx : end_idx])
-            scores.append(score)
-        return torch.tensor(scores)
 
     def process_batch(self, batch_idx, batch, metrics, part):
         """
@@ -130,54 +121,39 @@ class Inferencer(BaseTrainer):
         batch = self.move_batch_to_device(batch)
         batch = self.transform_batch(batch)  # transform batch on device -- faster
 
-        outputs1_1 = self.model(batch["data_object1_1"])
-        embedding_11 = F.normalize(outputs1_1, p=2, dim=1)
+        outputs_1 = self.model(batch["data_object_1"])
+        embedding_1 = F.normalize(outputs_1, p=2, dim=1)
 
-        outputs1_2 = self.model(batch["data_object1_2"])
-        embedding_12 = F.normalize(outputs1_2, p=2, dim=1)
+        outputs_2 = self.model(batch["data_object_2"])
+        embedding_2 = F.normalize(outputs_2, p=2, dim=1)
 
-        outputs2_1 = self.model(batch["data_object2_1"])
-        embedding_21 = F.normalize(outputs2_1, p=2, dim=1)
-
-        outputs2_2 = self.model(batch["data_object2_2"])
-        embedding_22 = F.normalize(outputs2_2, p=2, dim=1)
-
-        score_1 = torch.matmul(embedding_11, embedding_21.T).diagonal()
-        score_2 = self.averaging(torch.matmul(embedding_12, embedding_22.T)).to(self.device)
-        scores = (score_1 + score_2) / 2
-        outputs = {"logits" : scores}
-
+        outputs = {"embedding1" : embedding_1, "embedding2" : embedding_2}
 
         batch.update(outputs)
 
-        # if metrics is not None:
-        #     for met in self.metrics["inference"]:
-        #         metrics.update(met.name, met(**batch))
-
-        # Some saving logic. This is an example
-        # Use if you need to save predictions on disk
-
-        batch_size = batch["logits"].shape[0]
-        current_id = batch_idx * batch_size
-
-        for i in range(batch_size):
-            # clone because of
-            # https://github.com/pytorch/pytorch/issues/1995
-            logits = batch["logits"][i].clone()
-            label = batch["labels"][i].clone()
-
-            output_id = current_id + i
-
-            output = {
-                "scores": logits,
-                "label": label,
-            }
-
-            if self.save_path is not None:
-                # you can use safetensors or other lib here
-                torch.save(output, self.save_path / part / f"output_{output_id}.pth")
-
         return batch
+    
+    def count_scores(self, part):
+        labels = []
+        scores = []
+        for elem in self.pairs:
+            label, idx1, idx2 = elem.tolist()
+            labels.append(label)
+            embedding_11, embedding_12 = self.embeddings[idx1][0], self.embeddings[idx1][1]
+            embedding_21, embedding_22 = self.embeddings[idx2][0], self.embeddings[idx2][1]
+            score_1 = torch.mean(torch.matmul(embedding_11, embedding_21.T))
+            score_2 = torch.mean(torch.matmul(embedding_12, embedding_22.T))
+            score = (score_1 + score_2) / 2
+            scores.append(score)
+
+        output = {
+            "scores": scores,
+            "labels": labels,
+        }
+        if self.save_path is not None:
+            torch.save(output, self.save_path / part / f"output.pth")
+
+        return labels, scores
 
     def _inference_part(self, part, dataloader):
         """
@@ -199,9 +175,6 @@ class Inferencer(BaseTrainer):
         if self.save_path is not None:
             (self.save_path / part).mkdir(exist_ok=True, parents=True)
 
-        labels = []
-        scores = []
-
         with torch.no_grad():
             for batch_idx, batch in tqdm(
                 enumerate(dataloader),
@@ -214,11 +187,14 @@ class Inferencer(BaseTrainer):
                     part=part,
                     metrics=self.evaluation_metrics,
                 )
-                labels.extend(batch["labels"])
-                scores.extend(batch["logits"])
-        
-        results = {}
+                
+                for index, emb1, emb2 in zip(batch["index"], batch["embedding1"], batch["embedding1"]):
+                    self.embeddings[index] = [emb1, emb2]
+                self.pairs = batch["test_pairs"][0]
 
+
+        labels, scores = self.count_scores(part)     
+        results = {}
         if self.evaluation_metrics is not None:
             for met in self.metrics["inference"]:
                 results[met.name] = met(torch.tensor(scores), torch.tensor(labels))

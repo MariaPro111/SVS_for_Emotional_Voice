@@ -13,16 +13,30 @@ class EvalDataset(BaseDataset):
         super().__init__(index, *args, **kwargs)
 
     def _create_index_from_txt(self):
+        path_idx = {}
         index = []
-        with open(self.txt_path, "r") as f:
-            for line in f:
-                parts = line.strip().split()
-                label, path1, path2 = parts
-                index.append({
-                    "label": int(label),
-                    "path1": self.data_path + '/' + path1,
-                    "path2": self.data_path + '/' + path2
+        files = []
+        test_pairs = []
+        lines = open(self.txt_path).read().splitlines()
+        for line in lines:
+            files.append(line.split()[1])
+            files.append(line.split()[2])
+        setfiles = list(set(files))
+
+        for i, path in enumerate(setfiles):
+            path_idx[path] = i
+        
+        for line in lines:
+            line = line.split()
+            test_pairs.append([int(line[0]), path_idx[line[1]], path_idx[line[2]]])
+
+        for path in setfiles:
+            index.append({
+                    "data_path": self.data_path + '/' + path,
+                    "index": path_idx[path],
+                    "test_pairs": test_pairs
                 })
+  
         return index
 
     
@@ -47,17 +61,17 @@ class EvalDataset(BaseDataset):
 
     def __getitem__(self, ind):
         data_dict = self._index[ind]
-        data_path1 = data_dict["path1"]
-        data_path2 = data_dict["path2"]
-        data_object1_1, data_object1_2 = self.load_object(data_path1)
-        data_object2_1, data_object2_2 = self.load_object(data_path2)
-        data_label = data_dict["label"]
+        data_path = data_dict["data_path"]
+        data_index = data_dict["index"]
+        data_object_1, data_object_2 = self.load_object(data_path)
+        test_pairs = data_dict["test_pairs"]
 
-        instance_data = {"data_object1_1": data_object1_1, 
-                         "data_object1_2": data_object1_2,
-                         "data_object2_1": data_object2_1, 
-                         "data_object2_2": data_object2_2,
-                         "labels": data_label}
+        instance_data = {"data_object_1": data_object_1, 
+                         "data_object_2": data_object_2,
+                         "index": data_index,
+                         "test_pairs": test_pairs
+                        } 
+                         
 
         return instance_data
 

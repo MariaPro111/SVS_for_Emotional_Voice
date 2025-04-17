@@ -32,7 +32,7 @@ class EERMetric(BaseMetric):
         best_threshold = thresholds[idx]
 
         return {
-            "eer": torch.tensor(eer, device=self.device),
-            "threshold": torch.tensor(best_threshold, device=self.device)
+            "eer": eer,
+            "threshold": best_threshold
         }
     

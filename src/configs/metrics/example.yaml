@@ -1,9 +1,9 @@
 device: "auto"
 train: # metrics that are calculated during training
-  - _target_: src.metrics.ExampleMetric
+  - _target_: src.metrics.ClassificationMetric
     metric:
       _target_: torchmetrics.classification.MulticlassAccuracy
-      num_classes: 10
+      num_classes: 69
     device: ${metrics.device}
     name: "TRAIN_MulticlassAccuracy" # just an example to see difference
 inference: # metrics that are calculated during inference (eval)

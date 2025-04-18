@@ -15,13 +15,13 @@ test1:
   _target_: src.datasets.EvalDataset
   list_path: 'my_data/voxceleb_data/Vox1_O1.txt'
   data_path: 'my_data/voxceleb_data'
-  name: "test1"
+  name: "voxceleb"
   instance_transforms: ${transforms.instance_transforms.inference}
 test2:
   _target_: src.datasets.EvalDataset
   list_path: 'my_data/crema-d_test/crema_test_list1.txt'
   data_path: 'my_data/crema-d_test'
-  name: "test2"
+  name: "crema-d"
   instance_transforms: ${transforms.instance_transforms.inference}
 # test:
 #   _target_: src.datasets.ExampleDataset

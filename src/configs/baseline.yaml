@@ -24,6 +24,7 @@ trainer:
   n_epochs: 20
   epoch_len: 500
   device_tensors: ["data_object", "labels"] # which tensors should be on device (ex. GPU)
+  device_tensors_inference: ["data_object_1", "data_object_2"]
   resume_from: null # null or path to the checkpoint dir with *.pth and config.yaml
   from_pretrained: "pretrained/pretrain.model"
   device: auto # device name or "auto"

@@ -11,13 +11,18 @@ train:
     #   n_classes: 10
     #   name: "train20"
     #   instance_transforms: ${transforms.instance_transforms.train}
-# val:
-#   _target_: src.datasets.ExampleDataset
-#   input_length: 1024
-#   dataset_length: 15
-#   n_classes: 10
-#   name: "val"
-#   instance_transforms: ${transforms.instance_transforms.inference}
+test1:
+  _target_: src.datasets.EvalDataset
+  list_path: 'my_data/voxceleb_data/Vox1_O1.txt'
+  data_path: 'my_data/voxceleb_data'
+  name: "test1"
+  instance_transforms: ${transforms.instance_transforms.inference}
+test2:
+  _target_: src.datasets.EvalDataset
+  list_path: 'my_data/crema-d_test/crema_test_list1.txt'
+  data_path: 'my_data/crema-d_test'
+  name: "test2"
+  instance_transforms: ${transforms.instance_transforms.inference}
 # test:
 #   _target_: src.datasets.ExampleDataset
 #   input_length: 1024

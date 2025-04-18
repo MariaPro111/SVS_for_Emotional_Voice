@@ -1,5 +1,8 @@
 from src.metrics.tracker import MetricTracker
 from src.trainer.base_trainer import BaseTrainer
+import torch
+from tqdm.auto import tqdm
+import torch.nn.functional as F
 
 
 class Trainer(BaseTrainer):
@@ -53,6 +56,141 @@ class Trainer(BaseTrainer):
         for met in metric_funcs:
             metrics.update(met.name, met(**batch))
         return batch
+    
+    def inference_batch(self, batch_idx, batch, metrics, part):
+        """
+        Run batch through the model, compute metrics, and
+        save predictions to disk.
+
+        Save directory is defined by save_path in the inference
+        config and current partition.
+
+        Args:
+            batch_idx (int): the index of the current batch.
+            batch (dict): dict-based batch containing the data from
+                the dataloader.
+            metrics (MetricTracker): MetricTracker object that computes
+                and aggregates the metrics. The metrics depend on the type
+                of the partition (train or inference).
+            part (str): name of the partition. Used to define proper saving
+                directory.
+        Returns:
+            batch (dict): dict-based batch containing the data from
+                the dataloader (possibly transformed via batch transform)
+                and model outputs.
+        """
+        batch = self.move_batch_to_device(batch, part)
+        batch = self.transform_batch(batch)  # transform batch on device -- faster
+
+        outputs_1 = self.model(batch["data_object_1"])
+        embedding_1 = F.normalize(outputs_1, p=2, dim=1)
+
+        outputs_2 = self.model(batch["data_object_2"])
+        embedding_2 = F.normalize(outputs_2, p=2, dim=1)
+
+        outputs = {"embedding1" : embedding_1, "embedding2" : embedding_2}
+
+        batch.update(outputs)
+        print(batch["data_object_1"].shape)
+        return batch
+    
+    def count_scores(self, pairs, embeddings):
+        labels = []
+        scores = []
+        for elem in pairs:
+            label, idx1, idx2 = elem.tolist()
+            labels.append(label)
+            embedding_11, embedding_12 = embeddings[idx1][0], embeddings[idx1][1]
+            embedding_21, embedding_22 = embeddings[idx2][0], embeddings[idx2][1]
+            score_1 = torch.mean(torch.matmul(embedding_11, embedding_21.T))
+            score_2 = torch.mean(torch.matmul(embedding_12, embedding_22.T))
+            score = (score_1 + score_2) / 2
+            scores.append(score)
+
+        output = {
+            "scores": scores,
+            "labels": labels,
+        }
+        # if self.save_path is not None:
+        #     torch.save(output, self.save_path / part / f"output.pth")
+
+        return labels, scores
+    
+    def _inference_part(self, epoch, part, dataloader):
+        """
+        Run inference on a given partition and save predictions
+
+        Args:
+            part (str): name of the partition.
+            dataloader (DataLoader): dataloader for the given partition.
+        Returns:
+            logs (dict): metrics, calculated on the partition.
+        """
+        embeddings = {}
+        pairs = []
+        self.is_train = False
+        self.model.eval()
+        self.evaluation_metrics.reset()
+        with torch.no_grad():
+            for batch_idx, batch in tqdm(
+                enumerate(dataloader),
+                desc=part,
+                total=len(dataloader),
+            ):
+                batch = self.inference_batch(
+                    batch_idx=batch_idx,
+                    batch=batch,
+                    part=part,
+                    metrics=self.evaluation_metrics,
+                )
+                
+                for i in range(batch["embedding1"].shape[0]):
+                    embeddings[batch["index"][i].item()] = [batch["embedding1"][i], batch["embedding2"][i*5 : (i + 1)*5, :]]
+                pairs = batch["test_pairs"][0]
+
+
+        labels, scores = self.count_scores(pairs, embeddings)     
+        results = {}
+        if self.evaluation_metrics is not None:
+            for met in self.metrics["inference"]:
+                results[met.name] = met(torch.tensor(scores), torch.tensor(labels))
+
+        return results
+       
+
+    def _evaluation_epoch(self, epoch, part, dataloader):
+        """
+        Evaluate model on the partition after training for an epoch.
+
+        Args:
+            epoch (int): current training epoch.
+            part (str): partition to evaluate on
+            dataloader (DataLoader): dataloader for the partition.
+        Returns:
+            logs (dict): logs that contain the information about evaluation.
+        """
+        if part != "train":
+            return self._inference_part(epoch, part, dataloader)
+        self.is_train = False
+        self.model.eval()
+        self.evaluation_metrics.reset()
+        with torch.no_grad():
+            for batch_idx, batch in tqdm(
+                enumerate(dataloader),
+                desc=part,
+                total=len(dataloader),
+            ):
+                batch = self.process_batch(
+                    batch,
+                    metrics=self.evaluation_metrics,
+                )
+            self.writer.set_step(epoch * self.epoch_len, part)
+            self._log_scalars(self.evaluation_metrics)
+            self._log_batch(
+                batch_idx, batch, part
+            )  # log only the last batch during inference
+
+        return self.evaluation_metrics.result()
 
     def _log_batch(self, batch_idx, batch, mode="train"):
         """

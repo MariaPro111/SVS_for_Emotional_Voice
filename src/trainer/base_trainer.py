@@ -248,6 +248,7 @@ class BaseTrainer:
             logs.update(**{f"{part}_{name}": value for name, value in val_logs.items()})
 
         return logs
+       
 
     def _evaluation_epoch(self, epoch, part, dataloader):
         """
@@ -333,7 +334,7 @@ class BaseTrainer:
                 stop_process = True
         return best, stop_process, not_improved_count
 
-    def move_batch_to_device(self, batch):
+    def move_batch_to_device(self, batch, part="train"):
         """
         Move all necessary tensors to the device.
 
@@ -344,7 +345,11 @@ class BaseTrainer:
             batch (dict): dict-based batch containing the data from
                 the dataloader with some of the tensors on the device.
         """
-        for tensor_for_device in self.cfg_trainer.device_tensors:
+        if part=="train":
+            device_tensors = self.cfg_trainer.device_tensors
+        else:
+            device_tensors = self.cfg_trainer.device_tensors_inference
+        for tensor_for_device in device_tensors:
             batch[tensor_for_device] = batch[tensor_for_device].to(self.device)
         return batch
 

@@ -6,9 +6,9 @@ from src.datasets.base_dataset import BaseDataset
 
 
 class EvalDataset(BaseDataset):
-    def __init__(self, txt_path, data_path, name="test", *args, **kwargs):
+    def __init__(self, data_list, data_path, name="test", *args, **kwargs):
         self.data_path = data_path
-        self.txt_path = txt_path
+        self.data_list = data_list
         index = self._create_index_from_txt()
         super().__init__(index, *args, **kwargs)
 
@@ -17,7 +17,7 @@ class EvalDataset(BaseDataset):
         index = []
         files = []
         test_pairs = []
-        lines = open(self.txt_path).read().splitlines()
+        lines = open(self.data_list).read().splitlines()
         for line in lines:
             files.append(line.split()[1])
             files.append(line.split()[2])

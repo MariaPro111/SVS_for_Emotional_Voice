@@ -188,7 +188,7 @@ class Inferencer(BaseTrainer):
                     metrics=self.evaluation_metrics,
                 )
                 
-                for index, emb1, emb2 in zip(batch["index"], batch["embedding1"], batch["embedding1"]):
+                for index, emb1, emb2 in zip(batch["index"], batch["embedding1"], batch["embedding2"]):
                     self.embeddings[index.item()] = [emb1, emb2]
                 self.pairs = batch["test_pairs"][0]
 

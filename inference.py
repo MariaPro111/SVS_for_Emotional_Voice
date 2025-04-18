@@ -35,7 +35,7 @@ def main(config):
 
     # build model architecture, then print to console
     model = instantiate(config.model).to(device)
-    print(model)
+    # print(model)
 
     # get metrics
     metrics = instantiate(config.metrics)

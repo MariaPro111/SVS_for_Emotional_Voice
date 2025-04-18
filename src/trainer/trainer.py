@@ -34,11 +34,10 @@ class Trainer(BaseTrainer):
             metric_funcs = self.metrics["train"]
             self.optimizer.zero_grad()
 
-        outputs = self.model(**batch)
-        batch.update(outputs)
-
-        all_losses = self.criterion(**batch)
-        batch.update(all_losses)
+        embeddings = self.model(batch["data_object"], aug=True)
+        batch.update({"embeddings": embeddings})
+        results = self.criterion(embeddings, batch["labels"])
+        batch.update(results)
 
         if self.is_train:
             batch["loss"].backward()  # sum of all losses is always called loss

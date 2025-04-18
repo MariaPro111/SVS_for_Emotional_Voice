@@ -1,0 +1,27 @@
+train:
+    _target_: src.datasets.TrainDataset
+    list_path: "my_data/crema_train/train_list.txt"
+    data_path: "my_data/crema_train"
+    num_frames: 200     #'Duration of the input segments, eg: 200 for 2 second'
+    name: "train"
+    # instance_transforms: ${transforms.instance_transforms.train}
+    # - _target_: src.datasets.ExampleDataset
+    #   input_length: 1024
+    #   dataset_length: 20
+    #   n_classes: 10
+    #   name: "train20"
+    #   instance_transforms: ${transforms.instance_transforms.train}
+# val:
+#   _target_: src.datasets.ExampleDataset
+#   input_length: 1024
+#   dataset_length: 15
+#   n_classes: 10
+#   name: "val"
+#   instance_transforms: ${transforms.instance_transforms.inference}
+# test:
+#   _target_: src.datasets.ExampleDataset
+#   input_length: 1024
+#   dataset_length: 15
+#   n_classes: 10
+#   name: "test"
+#   instance_transforms: ${transforms.instance_transforms.inference}

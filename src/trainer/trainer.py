@@ -91,7 +91,6 @@ class Trainer(BaseTrainer):
         outputs = {"embedding1" : embedding_1, "embedding2" : embedding_2}
 
         batch.update(outputs)
-        print(batch["data_object_1"].shape)
         return batch
     
     def count_scores(self, pairs, embeddings):
@@ -154,6 +153,9 @@ class Trainer(BaseTrainer):
         if self.evaluation_metrics is not None:
             for met in self.metrics["inference"]:
                 results[met.name] = met(torch.tensor(scores), torch.tensor(labels))
+                self.writer.add_scalar(
+                    met.name, results[met.name]
+                )
 
         return results
        

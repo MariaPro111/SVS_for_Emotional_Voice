@@ -31,8 +31,4 @@ class EERMetric(BaseMetric):
         eer = max(fpr[idx], fnr[idx]) * 100
         best_threshold = thresholds[idx]
 
-        return {
-            "eer": eer,
-            "threshold": best_threshold
-        }
-    
+        return eer

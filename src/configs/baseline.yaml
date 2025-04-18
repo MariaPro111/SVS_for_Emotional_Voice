@@ -29,7 +29,7 @@ trainer:
   from_pretrained: "pretrained/pretrain.model"
   device: auto # device name or "auto"
   override: True # if True, will override the previous run with the same name
-  monitor: "min test_EqualErrorRate" # "off" or "max/min metric_name", i.e. our goal is to maximize/minimize metric
+  monitor: "min test2_EqualErrorRate" # "off" or "max/min metric_name", i.e. our goal is to maximize/minimize metric
   save_period: 5 # checkpoint each save_period epochs in addition to the best epoch
   early_stop: ${trainer.n_epochs} # epochs for early stopping
   save_dir: "saved"

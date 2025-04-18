@@ -7,7 +7,7 @@
 #   instance_transforms: ${transforms.instance_transforms.inference}
 test:
   _target_: src.datasets.EvalDataset
-  data_list: 'data/voxceleb_data/Vox1_O.txt'
+  list_path: 'data/voxceleb_data/Vox1_O.txt'
   data_path: 'data/voxceleb_data'
   name: "test"
   instance_transforms: ${transforms.instance_transforms.inference}

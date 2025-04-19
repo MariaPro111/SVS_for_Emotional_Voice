@@ -151,8 +151,8 @@ class Trainer(BaseTrainer):
         labels, scores = self.count_scores(pairs, embeddings)     
         results = {}
         if self.evaluation_metrics is not None:
-            for i, met in enumerate(self.metrics["inference"]):
-                name = met.name + str(i+1)
+            for met in enumerate(self.metrics["inference"]):
+                name = part + '_' + met.name
                 results[name] = met(torch.tensor(scores), torch.tensor(labels))
                 self.writer.add_scalar(
                     name, results[name]

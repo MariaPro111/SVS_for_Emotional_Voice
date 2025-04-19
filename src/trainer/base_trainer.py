@@ -472,6 +472,7 @@ class BaseTrainer:
             "arch": arch,
             "epoch": epoch,
             "state_dict": self.model.state_dict(),
+            "criterion": self.criterion.state_dict(),
             "optimizer": self.optimizer.state_dict(),
             "lr_scheduler": self.lr_scheduler.state_dict(),
             "monitor_best": self.mnt_best,
@@ -515,6 +516,7 @@ class BaseTrainer:
                 "of the checkpoint. This may yield an exception when state_dict is loaded."
             )
         self.model.load_state_dict(checkpoint["state_dict"])
+        self.criterion.load_state_dict(checkpoint["criterion"])
 
         # load optimizer state from checkpoint only when optimizer type is not changed.
         if (

@@ -1,19 +1,39 @@
+# train:
+#   _target_: torch.utils.data.ConcatDataset # we can concat datasets if we want to
+#   datasets:
+#     - _target_: src.datasets.TrainDataset
+#       list_path: "my_data/crema_train/train_list.txt"
+#       data_path: "my_data/crema_train"
+#       musan_path: "my_data/musan"    # 'The path to the MUSAN set'
+#       rir_path: "my_data/simulated_rirs"      #'The path to the RIR set'
+#       num_frames: 200     #'Duration of the input segments, eg: 200 for 2 second'
+#       start_label: 0
+#       name: "crema-d"
+#     - _target_: src.datasets.TrainDataset
+#       list_path: "my_data/voxceleb_train/train_list_vox.txt"
+#       data_path: "my_data/voxceleb_train"
+#       musan_path: "my_data/musan"    # 'The path to the MUSAN set'
+#       rir_path: "my_data/simulated_rirs"      #'The path to the RIR set'
+#       num_frames: 200     #'Duration of the input segments, eg: 200 for 2 second'
+#       start_label: 69
+#       name: "voxceleb"
+
 train:
   _target_: torch.utils.data.ConcatDataset # we can concat datasets if we want to
   datasets:
     - _target_: src.datasets.TrainDataset
-      list_path: "my_data/crema_train/train_list.txt"
-      data_path: "my_data/crema_train"
-      musan_path: "my_data/musan"    # 'The path to the MUSAN set'
-      rir_path: "my_data/simulated_rirs"      #'The path to the RIR set'
+      list_path: "/kaggle/input/my-data/my_data/crema_train/train_list.txt"
+      data_path: "/kaggle/input/my-data/my_data/crema_train"
+      musan_path: "/kaggle/input/my-data/my_data/musan"    # 'The path to the MUSAN set'
+      rir_path: "/kaggle/input/my-data/my_data/simulated_rirs"      #'The path to the RIR set'
       num_frames: 200     #'Duration of the input segments, eg: 200 for 2 second'
       start_label: 0
       name: "crema-d"
     - _target_: src.datasets.TrainDataset
-      list_path: "my_data/voxceleb_train/train_list_vox.txt"
-      data_path: "my_data/voxceleb_train"
-      musan_path: "my_data/musan"    # 'The path to the MUSAN set'
-      rir_path: "my_data/simulated_rirs"      #'The path to the RIR set'
+      list_path: "/kaggle/input/voxceleb-train/voxceleb_train/train_list_vox.txt"
+      data_path: "/kaggle/input/voxceleb-train/voxceleb_train"
+      musan_path: "/kaggle/input/my-data/my_data/musan"    # 'The path to the MUSAN set'
+      rir_path: "/kaggle/input/my-data/my_data/simulated_rirs"      #'The path to the RIR set'
       num_frames: 200     #'Duration of the input segments, eg: 200 for 2 second'
       start_label: 69
       name: "voxceleb"

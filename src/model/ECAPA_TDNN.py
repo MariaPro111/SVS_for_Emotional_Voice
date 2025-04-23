@@ -193,7 +193,10 @@ class ECAPA_TDNN(nn.Module):
     def load_state_dict(self, loaded_state):
         self_state = self.state_dict()
         for name, param in loaded_state.items():
-            origname = name[16:]
+            if name[:16] == "speaker_encoder":
+                origname = name[16:]
+            else:
+                origname = name
             if origname not in self_state:             
                 continue
             if self_state[origname].size() != loaded_state[name].size():

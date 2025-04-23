@@ -30,8 +30,8 @@ train:
       start_label: 0
       name: "crema-d"
     - _target_: src.datasets.TrainDataset
-      list_path: "/kaggle/input/voxceleb-train/voxceleb_train/train_list_vox1.txt"
-      data_path: "/kaggle/input/voxceleb-train/voxceleb_train"
+      list_path: "/kaggle/input/my-data/my_data/voxceleb_train/train_list_vox1.txt"
+      data_path: "/kaggle/input/my-data/my_data/voxceleb_train"
       musan_path: "/kaggle/input/my-data/my_data/musan"    # 'The path to the MUSAN set'
       rir_path: "/kaggle/input/my-data/my_data/simulated_rirs"      #'The path to the RIR set'
       num_frames: 200     #'Duration of the input segments, eg: 200 for 2 second'

@@ -1,2 +1,3 @@
 _target_: src.model.ECAPA_TDNN
 C: 1024       #'Channel size for the speaker encoder'
+model_name: "ecapa-tdnn"

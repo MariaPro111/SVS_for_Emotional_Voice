@@ -1,0 +1,3 @@
+_target_: src.model.WavLMWrapper
+config_name: "microsoft/wavlm-base-sv"
+model_name: "wavlm"

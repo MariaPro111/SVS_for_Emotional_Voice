@@ -52,8 +52,8 @@ def main(config):
 
     # epoch_len = number of iterations for iteration-based training
     # epoch_len = None or len(dataloader) for epoch-based training
-    # epoch_len = config.trainer.get("epoch_len")
-    epoch_len = len(dataloaders["train"])
+    epoch_len = config.trainer.get("epoch_len")
+    #epoch_len = len(dataloaders["train"])
 
     trainer = Trainer(
         model=model,

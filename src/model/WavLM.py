@@ -1,5 +1,4 @@
 from transformers import WavLMForXVector, WavLMConfig
-import torch
 import torch.nn as nn
 
 

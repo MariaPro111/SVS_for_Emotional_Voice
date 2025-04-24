@@ -37,7 +37,11 @@ class Trainer(BaseTrainer):
             metric_funcs = self.metrics["train"]
             self.optimizer.zero_grad()
 
-        embeddings = self.model(batch["data_object"], aug=True)
+        if self.model.model_name == "wavlm":
+            embeddings = self.model(batch["data_object"]).embeddings
+        else:
+            embeddings = self.model(batch["data_object"], aug=True)
+
         batch.update({"embeddings": embeddings})
         results = self.criterion(embeddings, batch["labels"])
         batch.update(results)
@@ -82,10 +86,14 @@ class Trainer(BaseTrainer):
         batch = self.move_batch_to_device(batch, part)
         batch = self.transform_batch(batch)  # transform batch on device -- faster
 
-        outputs_1 = self.model(batch["data_object_1"])
-        embedding_1 = F.normalize(outputs_1, p=2, dim=1)
+        if self.model.model_name == "wavlm":
+            outputs_1 = self.model(batch["data_object_1"]).embeddings
+            outputs_2 = self.model(batch["data_object_2"]).embeddings
+        else:
+            outputs_1 = self.model(batch["data_object_1"])
+            outputs_2 = self.model(batch["data_object_2"])
 
-        outputs_2 = self.model(batch["data_object_2"])
+        embedding_1 = F.normalize(outputs_1, p=2, dim=1)
         embedding_2 = F.normalize(outputs_2, p=2, dim=1)
 
         outputs = {"embedding1" : embedding_1, "embedding2" : embedding_2}

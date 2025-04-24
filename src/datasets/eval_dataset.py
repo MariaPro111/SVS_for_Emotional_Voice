@@ -71,7 +71,7 @@ class EvalDataset(BaseDataset):
                          "index": data_index,
                          "test_pairs": test_pairs
                         } 
-                         
+        instance_data = self.preprocess_data(instance_data)                
 
         return instance_data
 

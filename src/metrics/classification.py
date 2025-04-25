@@ -4,7 +4,7 @@ from src.metrics.base_metric import BaseMetric
 
 
 class ClassificationMetric(BaseMetric):
-    def __init__(self, metric, device, *args, **kwargs):
+    def __init__(self, metric, device, class_type="speakers", *args, **kwargs):
         """
         Example of a nested metric class. Applies metric function
         object (for example, from TorchMetrics) on tensors.
@@ -20,8 +20,9 @@ class ClassificationMetric(BaseMetric):
         if device == "auto":
             device = "cuda" if torch.cuda.is_available() else "cpu"
         self.metric = metric.to(device)
+        self.class_type = class_type
 
-    def __call__(self, logits: torch.Tensor, labels: torch.Tensor, **kwargs):
+    def __call__(self, logits, labels, emo_logits=None, emo_labels=None, **kwargs):
         """
         Metric calculation logic.
 
@@ -31,5 +32,8 @@ class ClassificationMetric(BaseMetric):
         Returns:
             metric (float): calculated metric.
         """
+        if self.class_type == "emotions":
+            classes = emo_logits.argmax(dim=-1)
+            return self.metric(classes, emo_labels)
         classes = logits.argmax(dim=-1)
         return self.metric(classes, labels)

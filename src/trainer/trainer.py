@@ -43,7 +43,7 @@ class Trainer(BaseTrainer):
             embeddings = self.model(batch["data_object"], aug=True)
 
         batch.update({"embeddings": embeddings})
-        results = self.criterion(embeddings, batch["labels"])
+        results = self.criterion(**batch)
         batch.update(results)
 
         if self.is_train:

@@ -1,0 +1,20 @@
+device: "auto"
+train: # metrics that are calculated during training
+  - _target_: src.metrics.ClassificationMetric
+    metric:
+      _target_: torchmetrics.classification.MulticlassAccuracy
+      num_classes: ${loss_function.n_speakers}
+    device: ${metrics.device}
+    name: "TRAIN_MulticlassAccuracy" # just an example to see difference
+    class_type: "speakers"
+  - _target_: src.metrics.ClassificationMetric
+    metric:
+      _target_: torchmetrics.classification.MulticlassAccuracy
+      num_classes: ${loss_function.n_emotions}
+    device: ${metrics.device}
+    name: "Emotion_MulticlassAccuracy" # just an example to see difference
+    class_type: "emotions"
+inference: # metrics that are calculated during inference (eval)
+  - _target_: src.metrics.EERMetric
+    device: ${metrics.device}
+    name: "EqualErrorRate"

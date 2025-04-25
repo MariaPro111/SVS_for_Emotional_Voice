@@ -61,4 +61,7 @@ def collate_fn(dataset_items: list[dict]):
     )
     result_batch["labels"] = torch.tensor([elem["labels"] for elem in dataset_items])
 
+    if "emo_labels" in dataset_items[0]:
+        result_batch["emo_labels"] = torch.tensor([elem["emo_labels"] for elem in dataset_items])
+
     return result_batch

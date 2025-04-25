@@ -1,4 +1,4 @@
 defaults:
   - batch_transforms: example
-  - instance_transforms: wavlm_transforms
+  - instance_transforms: ecapa_transforms
   - _self_

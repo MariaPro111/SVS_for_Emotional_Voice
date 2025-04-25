@@ -1,0 +1,9 @@
+train:
+  data_object: # name of the tensor on which we apply transform
+    _target_: torch.nn.Sequential # to apply several transforms sequentially
+    _args_:
+      - _target_: src.transforms.NoiseAug
+        num_frames: 200
+        musan_path: "/kaggle/input/my-data/my_data/musan"
+        rir_path: "/kaggle/input/my-data/my_data/simulated_rirs"
+inference: null

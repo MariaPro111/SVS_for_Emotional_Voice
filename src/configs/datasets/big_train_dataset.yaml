@@ -1,15 +1,15 @@
 train:
   _target_: torch.utils.data.ConcatDataset # we can concat datasets if we want to
   datasets:
-    - _target_: src.datasets.TrainDataset
-      list_path: "/kaggle/input/my-data/my_data/crema_train/train_list.txt"
+    - _target_: src.datasets.TrainEmoDataset
+      list_path: "/kaggle/input/emo-list/train_emo_list.txt'"
       data_path: "/kaggle/input/my-data/my_data/crema_train"
       num_frames: 200     #'Duration of the input segments, eg: 200 for 2 second'
       start_label: 0
       name: "crema-d"
       instance_transforms: ${transforms.instance_transforms.train}
-    - _target_: src.datasets.TrainDataset
-      list_path: "/kaggle/input/my-data/my_data/voxceleb_train/train_list_vox.txt"
+    - _target_: src.datasets.TrainEmoDataset
+      list_path: "/kaggle/input/vox-train-list/train_emo_list_vox.txt"
       data_path: "/kaggle/input/my-data/my_data/voxceleb_train"
       num_frames: 200     #'Duration of the input segments, eg: 200 for 2 second'
       start_label: 69

@@ -5,7 +5,7 @@ from src.loss.AAMsoftmax import AAMsoftmax
 
 
 class MultiTaskLoss(nn.Module):
-    def __init__(self, n_speakers, n_emotions, margin, scale, embedding_size=192, speaker_coef=1, emotion_coef=1): 
+    def __init__(self, n_speakers, n_emotions, margin, scale, embedding_size=192, speaker_coef=1, emotion_coef=1, **kwargs): 
         super().__init__()
         self.speaker_coef = speaker_coef
         self.emotion_coef = emotion_coef

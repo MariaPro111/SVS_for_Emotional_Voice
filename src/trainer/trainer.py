@@ -45,6 +45,11 @@ class Trainer(BaseTrainer):
         batch.update({"embeddings": embeddings})
         results = self.criterion(**batch)
         batch.update(results)
+        
+        if "alpha" in batch:
+            self.writer.add_scalar(
+                        "alpha", batch["alpha"].item()
+                    )
 
         if self.is_train:
             batch["loss"].backward()  # sum of all losses is always called loss

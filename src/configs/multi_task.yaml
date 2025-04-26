@@ -21,9 +21,11 @@ loss_function:
   margin:  0.2     # Loss margin
   scale: 30        # Loss scale
   embedding_size: 192
-  speaker_coef: 0.15
+  speaker_coef: 1
   emotion_coef: 1
-  alpha: 0.4       
+  max_alpha: 0.4
+  n_epochs: ${trainer.n_epochs}
+  epoch_len: ${trainer.epoch_len}       
 trainer:
   log_step: 50
   n_epochs: 20

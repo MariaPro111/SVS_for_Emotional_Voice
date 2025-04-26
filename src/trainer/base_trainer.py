@@ -142,6 +142,29 @@ class BaseTrainer:
         if config.trainer.get("from_pretrained") is not None:
             self._from_pretrained(config.trainer.get("from_pretrained"))
 
+                # Заморозить torchaudio feature extractor
+        for param in self.model.torchfbank.parameters():
+            param.requires_grad = False
+
+        # Заморозить первые сверточные слои
+        for param in self.model.conv1.parameters():
+            param.requires_grad = False
+        for param in self.model.bn1.parameters():
+            param.requires_grad = False
+
+        # Заморозить первые Bottle2neck блоки
+        for param in self.model.layer1.parameters():
+            param.requires_grad = False
+        for param in self.model.layer2.parameters():
+            param.requires_grad = False
+
+        self.optimizer = torch.optim.Adam(
+            filter(lambda p: p.requires_grad, self.model.parameters()), 
+            lr=1e-5, 
+            weight_decay=2e-5
+        )
+
+
     def train(self):
         """
         Wrapper around training process to save model on keyboard interrupt.

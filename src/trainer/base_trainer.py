@@ -142,27 +142,27 @@ class BaseTrainer:
         if config.trainer.get("from_pretrained") is not None:
             self._from_pretrained(config.trainer.get("from_pretrained"))
 
-                # Заморозить torchaudio feature extractor
-        for param in self.model.torchfbank.parameters():
-            param.requires_grad = False
+        #         # Заморозить torchaudio feature extractor
+        # for param in self.model.torchfbank.parameters():
+        #     param.requires_grad = False
 
-        # Заморозить первые сверточные слои
-        for param in self.model.conv1.parameters():
-            param.requires_grad = False
-        for param in self.model.bn1.parameters():
-            param.requires_grad = False
+        # # Заморозить первые сверточные слои
+        # for param in self.model.conv1.parameters():
+        #     param.requires_grad = False
+        # for param in self.model.bn1.parameters():
+        #     param.requires_grad = False
 
-        # Заморозить первые Bottle2neck блоки
-        for param in self.model.layer1.parameters():
-            param.requires_grad = False
-        for param in self.model.layer2.parameters():
-            param.requires_grad = False
+        # # Заморозить первые Bottle2neck блоки
+        # for param in self.model.layer1.parameters():
+        #     param.requires_grad = False
+        # for param in self.model.layer2.parameters():
+        #     param.requires_grad = False
 
-        self.optimizer = torch.optim.Adam(
-            filter(lambda p: p.requires_grad, self.model.parameters()), 
-            lr=1e-5, 
-            weight_decay=2e-5
-        )
+        # self.optimizer = torch.optim.Adam(
+        #     filter(lambda p: p.requires_grad, self.model.parameters()), 
+        #     lr=1e-5, 
+        #     weight_decay=2e-5
+        # )
 
 
     def train(self):
@@ -571,11 +571,17 @@ class BaseTrainer:
             pretrained_path (str): path to the model state dict.
         """
         pretrained_path = str(pretrained_path)
+        if self.model.model_name == "ecapa-tdnn+":
+            checkpoint = torch.load(pretrained_path, map_location=lambda storage, loc: storage)
+            self.model.load_state_dict(checkpoint['model'], strict=False)
+            return
+
         if hasattr(self, "logger"):  # to support both trainer and inferencer
             self.logger.info(f"Loading model weights from: {pretrained_path} ...")
         else:
             print(f"Loading model weights from: {pretrained_path} ...")
         checkpoint = torch.load(pretrained_path, self.device)
+
 
         if checkpoint.get("state_dict") is not None:
             self.model.load_state_dict(checkpoint["state_dict"])

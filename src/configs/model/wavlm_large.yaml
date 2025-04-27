@@ -1,0 +1,9 @@
+_target_: src.model.ECAPA_TDNN_SMALL
+feat_dim: 1024
+emb_dim: 256
+feat_type: 'wavlm_large'
+sr: 16000
+feature_selection: "hidden_states"
+update_extract: False
+model_name: "wavlm + ecapa-tdnn"
+

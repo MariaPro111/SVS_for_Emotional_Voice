@@ -8,9 +8,12 @@ tqdm
 matplotlib
 pandas
 wandb
-hydra-core
+hydra-core==1.1.1
 soundfile
 
 black
 isort
 pre-commit
+
+# torch==1.10.1 
+# torchaudio==0.10.1 

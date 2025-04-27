@@ -4,6 +4,6 @@ train:
     _args_:
       - _target_: src.transforms.NoiseAug
         num_frames: 200
-        musan_path: "/kaggle/input/noise-aug/noise_aug/musan"
-        rir_path: "/kaggle/input/noise-aug/noise_aug/simulated_rirs"
+        musan_path: "my_data/musan"
+        rir_path: "my_data/simulated_rirs"
 inference: null

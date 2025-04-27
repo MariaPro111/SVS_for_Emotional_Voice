@@ -129,20 +129,20 @@ class BaseTrainer:
             writer=self.writer,
         )
 
-        # # define checkpoint dir and init everything if required
+        # define checkpoint dir and init everything if required
 
-        # self.checkpoint_dir = (
-        #     ROOT_PATH / config.trainer.save_dir / config.writer.run_name
-        # )
+        self.checkpoint_dir = (
+            ROOT_PATH / config.trainer.save_dir / config.writer.run_name
+        )
 
-        # if config.trainer.get("resume_from") is not None:
-        #     resume_path = self.checkpoint_dir / config.trainer.resume_from
-        #     self._resume_checkpoint(resume_path)
+        if config.trainer.get("resume_from") is not None:
+            resume_path = self.checkpoint_dir / config.trainer.resume_from
+            self._resume_checkpoint(resume_path)
 
-        # if config.trainer.get("from_pretrained") is not None:
-        #     self._from_pretrained(config.trainer.get("from_pretrained"))
+        if config.trainer.get("from_pretrained") is not None:
+            self._from_pretrained(config.trainer.get("from_pretrained"))
 
-        #         # Заморозить torchaudio feature extractor
+        #   # Заморозить torchaudio feature extractor
         # for param in self.model.torchfbank.parameters():
         #     param.requires_grad = False
 
@@ -574,6 +574,7 @@ class BaseTrainer:
         if self.model.model_name == "ecapa-tdnn+":
             checkpoint = torch.load(pretrained_path, map_location=lambda storage, loc: storage)
             self.model.load_state_dict(checkpoint['model'], strict=False)
+            print(f"Loading model weights from: {pretrained_path} ...")
             return
 
         if hasattr(self, "logger"):  # to support both trainer and inferencer

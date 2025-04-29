@@ -510,6 +510,9 @@ class ConvFeatureExtractionModel(nn.Module):
 
     def forward(self, x, mask=None):
         # BxT -> BxCxT
+        if x.dim() == 3:
+            print(x.shape)
+            x = x[:, :, 0] 
         x = x.unsqueeze(1)
         if self.conv_type == "custom":
             for conv in self.conv_layers:

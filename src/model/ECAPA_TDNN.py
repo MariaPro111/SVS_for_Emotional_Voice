@@ -80,6 +80,8 @@ class PreEmphasis(torch.nn.Module):
         )
 
     def forward(self, input: torch.tensor) -> torch.tensor:
+        if input.dim() == 3:
+            input = input[:, :, 0] 
         input = input.unsqueeze(1)
         input = F.pad(input, (1, 0), 'reflect')
         return F.conv1d(input, self.flipped_filter).squeeze(1)

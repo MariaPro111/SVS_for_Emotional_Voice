@@ -571,17 +571,12 @@ class BaseTrainer:
             pretrained_path (str): path to the model state dict.
         """
         pretrained_path = str(pretrained_path)
-        if self.model.model_name == "ecapa-tdnn+":
-            checkpoint = torch.load(pretrained_path, map_location=lambda storage, loc: storage)
-            self.model.load_state_dict(checkpoint['model'], strict=False)
-            print(f"Loading model weights from: {pretrained_path} ...")
-            return
 
         if hasattr(self, "logger"):  # to support both trainer and inferencer
             self.logger.info(f"Loading model weights from: {pretrained_path} ...")
         else:
             print(f"Loading model weights from: {pretrained_path} ...")
-        checkpoint = torch.load(pretrained_path, self.device)
+        checkpoint = torch.load(pretrained_path, map_location=self.device, weights_only=False)
 
 
         if checkpoint.get("state_dict") is not None:

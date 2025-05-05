@@ -12,8 +12,9 @@ class TrainEmoDataset(BaseDataset):
         self.num_frames = num_frames
         self.start_label = start_label
 		# Load data & labels
-        self.data_path = data_path
-        self.list_path = list_path
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        self.data_path = os.path.join(base_dir, "..", "..", data_path)
+        self.list_path = os.path.join(base_dir, "..", "..", list_path)
         index = self._create_index_from_txt()
         super().__init__(index, *args, **kwargs)
 

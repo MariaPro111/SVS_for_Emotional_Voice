@@ -1,5 +1,5 @@
 device: "auto"
-num_classes: ${loss_function.n_class}
+num_classes: ${loss_function.n_speakers}
 train: # metrics that are calculated during training
   - _target_: src.metrics.ClassificationMetric
     metric:

@@ -4,11 +4,11 @@ import torch.nn.functional as F
 
 
 class AAMsoftmax(nn.Module):
-    def __init__(self, n_class, margin, scale, embedding_size=192): 
+    def __init__(self, n_speakers, margin, scale, embedding_size=192): 
         super(AAMsoftmax, self).__init__()
         self.m = margin
         self.s = scale
-        self.weight = torch.nn.Parameter(torch.FloatTensor(n_class, embedding_size), requires_grad=True)
+        self.weight = torch.nn.Parameter(torch.FloatTensor(n_speakers, embedding_size), requires_grad=True)
         self.ce = nn.CrossEntropyLoss()
         nn.init.xavier_normal_(self.weight, gain=1)
         self.cos_m = math.cos(self.m)

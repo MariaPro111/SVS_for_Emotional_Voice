@@ -1,16 +1,16 @@
 train:
-  _target_: torch.utils.data.ConcatDataset # we can concat datasets if we want to
+  _target_: torch.utils.data.ConcatDataset # we concat datasets 
   datasets:
-    - _target_: src.datasets.TrainEmoDataset
-      list_path: "/kaggle/input/emo-list/train_emo_list.txt"
-      data_path: "/kaggle/input/my-data/my_data/crema_train"
+    - _target_: src.datasets.TrainDataset
+      list_path: "data/cremad/train_list.txt"
+      data_path: "data/cremad/crema_train"
       num_frames: 200     #'Duration of the input segments, eg: 200 for 2 second'
       start_label: 0
-      name: "crema-d"
+      name: "train"
       instance_transforms: ${transforms.instance_transforms.train}
-    - _target_: src.datasets.TrainEmoDataset
-      list_path: "/kaggle/input/vox-train-list/train_emo_list_vox.txt"
-      data_path: "/kaggle/input/my-data/my_data/voxceleb_train"
+    - _target_: src.datasets.TrainDataset
+      list_path: "data/voxceleb/vox_train_list.txt"
+      data_path: "data/voxceleb/train"
       num_frames: 200     #'Duration of the input segments, eg: 200 for 2 second'
       start_label: 69
       name: "voxceleb"
@@ -18,13 +18,13 @@ train:
 
 voxceleb:
   _target_: src.datasets.EvalDataset
-  list_path: 'my_data/voxceleb_data/Vox1_O1.txt'
-  data_path: 'my_data/voxceleb_data'
+  list_path: 'data/voxceleb/Vox1_O.txt'
+  data_path: 'data/voxceleb/test'
   name: "voxceleb"
   instance_transforms: ${transforms.instance_transforms.inference}
 cremad:
   _target_: src.datasets.EvalDataset
-  list_path: 'my_data/crema-d_test/crema_test_list1.txt'
-  data_path: 'my_data/crema-d_test'
+  list_path: 'data/cremad/cremad_test_list.txt'
+  data_path: 'data/cremad/crema-d_test'
   name: "crema-d"
   instance_transforms: ${transforms.instance_transforms.inference}

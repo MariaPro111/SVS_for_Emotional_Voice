@@ -2,7 +2,7 @@ defaults:
   - model: ecapa_tdnn
   - metrics: inference
   - datasets: eval_dataset
-  - dataloader: dataloader
+  - dataloader: inference_dataloader
   - transforms: example
   - _self_
 inferencer:
@@ -10,4 +10,4 @@ inferencer:
   device: auto    # device name or "auto"
   save_path: "example"  # any name here, can be a dataset name
   seed: 1
-  from_pretrained: "pretrained/pretrain.model"   # path to the pretrained model
+  from_pretrained: "data/weights/ecapatdnn_weights.pth"   # path to the pretrained model

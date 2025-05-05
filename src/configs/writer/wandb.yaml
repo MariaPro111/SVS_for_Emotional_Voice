@@ -3,7 +3,6 @@ project_name: "SVS_for_Emotional_Voice"
 entity: null
 run_name: "testing"
 mode: "online"
-# loss_names: ["loss", "speaker_loss", "emotion_loss"] # which losses to log (useful for multi-loss tasks, s.a. GANs)
 loss_names: ["loss"]
 log_checkpoints: False # set to True if you want to log save_dir with checkpoints to W&B
 id_length: 8 # length of the run_id

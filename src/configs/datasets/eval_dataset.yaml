@@ -1,13 +1,6 @@
-# val:
-#   _target_: src.datasets.ExampleDataset
-#   input_length: 1024
-#   dataset_length: 15
-#   n_classes: 10
-#   name: "val"
-#   instance_transforms: ${transforms.instance_transforms.inference}
 test:
   _target_: src.datasets.EvalDataset
-  list_path: 'my_data/voxceleb_data/Vox1_O.txt'
-  data_path: 'my_data/voxceleb_data'
+  list_path: 'data/cremad/cremad_test_list.txt'
+  data_path: 'data/cremad/crema-d_test'
   name: "test"
   instance_transforms: ${transforms.instance_transforms.inference}

@@ -1,4 +1,4 @@
 defaults:
   - batch_transforms: example
-  - instance_transforms: ecapa_transforms
+  - instance_transforms: example          # ecapa_transforms if want to use augmentations
   - _self_

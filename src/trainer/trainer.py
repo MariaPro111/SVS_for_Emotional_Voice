@@ -219,9 +219,6 @@ class Trainer(BaseTrainer):
             mode (str): train or inference. Defines which logging
                 rules to apply.
         """
-        # method to log data from you batch
-        # such as audio, text or images, for example
-
         # logging scheme might be different for different partitions
         if mode == "train":  # the method is called only every self.log_step steps
             # Log Stuff

@@ -287,21 +287,8 @@ class ECAPA_TDNN(nn.Module):
 
         return out
 
-# class ECAPA_TDNN_SMALL(nn.Module):
-#     def __new__(feat_dim, emb_dim=256, feat_type='fbank', sr=16000, feature_selection="hidden_states", update_extract=False, config_path=None):
-#         return ECAPA_TDNN(feat_dim=feat_dim, channels=512, emb_dim=emb_dim,
-#                       feat_type=feat_type, sr=sr, feature_selection=feature_selection, update_extract=update_extract, config_path=config_path)
-    
 
 def ECAPA_TDNN_SMALL(feat_dim, emb_dim=256, feat_type='fbank', sr=16000, feature_selection="hidden_states", update_extract=False, config_path=None, **kwargs):
     return ECAPA_TDNN(feat_dim=feat_dim, channels=512, emb_dim=emb_dim,
                       feat_type=feat_type, sr=sr, feature_selection=feature_selection, update_extract=update_extract, config_path=config_path)
 
-# if __name__ == '__main__':
-#     x = torch.zeros(2, 32000)
-#     model = ECAPA_TDNN_SMALL(feat_dim=768, emb_dim=256, feat_type='hubert_base', feature_selection="hidden_states",
-#                               update_extract=False)
-
-#     out = model(x)
-#     # print(model)
-#     print(out.shape)

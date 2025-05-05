@@ -4,6 +4,7 @@ import torch
 from numpy import inf
 from torch.nn.utils import clip_grad_norm_
 from tqdm.auto import tqdm
+import os
 
 from src.datasets.data_utils import inf_loop
 from src.metrics.tracker import MetricTracker
@@ -141,28 +142,6 @@ class BaseTrainer:
 
         if config.trainer.get("from_pretrained") is not None:
             self._from_pretrained(config.trainer.get("from_pretrained"))
-
-        #   # Заморозить torchaudio feature extractor
-        # for param in self.model.torchfbank.parameters():
-        #     param.requires_grad = False
-
-        # # Заморозить первые сверточные слои
-        # for param in self.model.conv1.parameters():
-        #     param.requires_grad = False
-        # for param in self.model.bn1.parameters():
-        #     param.requires_grad = False
-
-        # # Заморозить первые Bottle2neck блоки
-        # for param in self.model.layer1.parameters():
-        #     param.requires_grad = False
-        # for param in self.model.layer2.parameters():
-        #     param.requires_grad = False
-
-        # self.optimizer = torch.optim.Adam(
-        #     filter(lambda p: p.requires_grad, self.model.parameters()), 
-        #     lr=1e-5, 
-        #     weight_decay=2e-5
-        # )
 
 
     def train(self):
@@ -570,7 +549,14 @@ class BaseTrainer:
         Args:
             pretrained_path (str): path to the model state dict.
         """
-        pretrained_path = str(pretrained_path)
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        str_pretrained_path = str(pretrained_path)
+        pretrained_path = os.path.join(base_dir, "..", "..", str_pretrained_path)
+        if self.model.model_name == "ecapa-tdnn+" and ("pretrained" in str_pretrained_path):
+            checkpoint = torch.load(pretrained_path, map_location=lambda storage, loc: storage)
+            self.model.load_state_dict(checkpoint['model'], strict=False)
+            print(f"Loading model weights from: {pretrained_path} ...")
+            return
 
         if hasattr(self, "logger"):  # to support both trainer and inferencer
             self.logger.info(f"Loading model weights from: {pretrained_path} ...")

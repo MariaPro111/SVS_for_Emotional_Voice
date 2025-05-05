@@ -137,7 +137,14 @@ python3 inference.py \
         datasets.test.list_path=PATH_TO_TEST_PAIRS \
         datasets.test.data_path=PATH_TO_TEST_DATA
 ```
-Где 'MODEL_NAME' - название модели ('ecapa_tdnn' или 'wavlm_large'), 'PATH_TO_WEIGHTS_OF_MODEL' - путь к файлу с весами модели, 'PATH_TO_TEST_PAIRS' - путь к списку тестовых пар, 'PATH_TO_TEST_DATA' - путь к папке с тестовыми аудиозаписями.
+Где 
+        'MODEL_NAME' - название модели ('ecapa_tdnn' или 'wavlm_large'), 
+
+        'PATH_TO_WEIGHTS_OF_MODEL' - путь к файлу с весами модели, 
+
+        'PATH_TO_TEST_PAIRS' - путь к списку тестовых пар, 
+
+        'PATH_TO_TEST_DATA' - путь к папке с тестовыми аудиозаписями.
 
 ### Примеры тестирования
 
@@ -146,7 +153,7 @@ python3 inference.py \
     ```bash
     python3 inference.py \
             model=ecapa_tdnn \
-            inferencer.from_pretrained='data/weights/ecapatdnn_pretrained.model'        # Тестирование на CREMA-D        
+            inferencer.from_pretrained='data/weights/ecapatdnn_pretrained.model' # Тестирование на CREMA-D        
     ```
 
     Результаты
@@ -159,7 +166,7 @@ python3 inference.py \
     ```bash
     python3 inference.py \
             model=ecapa_tdnn \
-            inferencer.from_pretrained='data/weights/ecapatdnn_weights.pth'             # Тестирование на CREMA-D
+            inferencer.from_pretrained='data/weights/ecapatdnn_weights.pth'  # Тестирование на CREMA-D
     ```
 
     Результаты
@@ -172,7 +179,7 @@ python3 inference.py \
     ```bash
     python3 inference.py \
             model=wavlm_large \
-            inferencer.from_pretrained='data/weights/wavlm_pretrained.pth'              # Тестирование на CREMA-D        
+            inferencer.from_pretrained='data/weights/wavlm_pretrained.pth' # Тестирование на CREMA-D        
     ```
 
     Результаты
@@ -185,7 +192,7 @@ python3 inference.py \
     ```bash
     python3 inference.py \
             model=wavlm_large \
-            inferencer.from_pretrained='pretrained/wavlm_weights.pth'                # Тестирование на CREMA-D 
+            inferencer.from_pretrained='pretrained/wavlm_weights.pth'   # Тестирование на CREMA-D 
     ```
 
     Результаты

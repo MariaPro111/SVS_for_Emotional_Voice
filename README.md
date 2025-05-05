@@ -137,14 +137,8 @@ python3 inference.py \
         datasets.test.list_path=PATH_TO_TEST_PAIRS \
         datasets.test.data_path=PATH_TO_TEST_DATA
 ```
-Где 
-        'MODEL_NAME' - название модели ('ecapa_tdnn' или 'wavlm_large'), 
-
-        'PATH_TO_WEIGHTS_OF_MODEL' - путь к файлу с весами модели, 
-
-        'PATH_TO_TEST_PAIRS' - путь к списку тестовых пар, 
-
-        'PATH_TO_TEST_DATA' - путь к папке с тестовыми аудиозаписями.
+Где 'MODEL_NAME' - название модели ('ecapa_tdnn' или 'wavlm_large'),  'PATH_TO_WEIGHTS_OF_MODEL' - путь к файлу с весами модели, 
+ 'PATH_TO_TEST_PAIRS' - путь к списку тестовых пар,  'PATH_TO_TEST_DATA' - путь к папке с тестовыми аудиозаписями.
 
 ### Примеры тестирования
 
@@ -202,7 +196,7 @@ python3 inference.py \
 
 ## Благодарности
 
-Этот репозиторий основан на [PyTorch Project Template](https://github.com/Blinorot/pytorch_project_template). Реализация модели ECAPA-TDNN взята из работы [ECAPA-TDNN](https://github.com/TaoRuijie/ECAPA-TDNN/tree/main). Архитектура модели WavLM-Large + ECAPA-TDNN адаптирована из проекта [UniSpeech](https://github.com/microsoft/UniSpeech/tree/main)
+Этот репозиторий основан на [PyTorch Project Template](https://github.com/Blinorot/pytorch_project_template). Реализация модели ECAPA-TDNN взята из работы [ECAPA-TDNN](https://github.com/TaoRuijie/ECAPA-TDNN/tree/main). Архитектура модели WavLM-Large + ECAPA-TDNN адаптирована из проекта [UniSpeech](https://github.com/microsoft/UniSpeech/tree/main).
 
 ## Лицензия
 
